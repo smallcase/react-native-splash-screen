@@ -3,16 +3,13 @@ package org.devio.rn.splashscreen;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Build;
-
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.lang.ref.WeakReference;
 
 /**
- * SplashScreen
- * 启动屏
- * from：http://www.devio.org
- * Author:CrazyCodeBoy
- * GitHub:https://github.com/crazycodeboy
- * Email:crazycodeboy@gmail.com
+ * SplashScreen 启动屏 from：http://www.devio.org Author:CrazyCodeBoy
+ * GitHub:https://github.com/crazycodeboy Email:crazycodeboy@gmail.com
  */
 public class SplashScreen {
     private static Dialog mSplashDialog;
@@ -21,17 +18,23 @@ public class SplashScreen {
     /**
      * 打开启动屏
      */
-    public static void show(final Activity activity, final int themeResId) {
-        if (activity == null) return;
+    public static void show(final Activity activity, final int themeResId, final Boolean shouldShowSpecial) {
+        if (activity == null)
+            return;
         mActivity = new WeakReference<Activity>(activity);
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (!activity.isFinishing()) {
                     mSplashDialog = new Dialog(activity, themeResId);
-                    mSplashDialog.setContentView(R.layout.launch_screen);
-                    mSplashDialog.setCancelable(false);
+                    if (shouldShowSpecial) {
+                        mSplashDialog.setContentView(R.layout.launch_screen_special);
 
+                    } else {
+                        mSplashDialog.setContentView(R.layout.launch_screen);
+                    }
+                    // mSplashDialog.setContentView(R.layout.launch_screen);
+                    mSplashDialog.setCancelable(false);
                     if (!mSplashDialog.isShowing()) {
                         mSplashDialog.show();
                     }
@@ -43,17 +46,17 @@ public class SplashScreen {
     /**
      * 打开启动屏
      */
-    public static void show(final Activity activity, final boolean fullScreen) {
+    public static void show(final Activity activity, final boolean fullScreen, Boolean shouldShowSpecial) {
         int resourceId = fullScreen ? R.style.SplashScreen_Fullscreen : R.style.SplashScreen_SplashTheme;
 
-        show(activity, resourceId);
+        show(activity, resourceId, shouldShowSpecial);
     }
 
     /**
      * 打开启动屏
      */
-    public static void show(final Activity activity) {
-        show(activity, false);
+    public static void show(final Activity activity, Boolean shouldShowSpecial) {
+        show(activity, false, shouldShowSpecial);
     }
 
     /**
@@ -67,7 +70,8 @@ public class SplashScreen {
             activity = mActivity.get();
         }
 
-        if (activity == null) return;
+        if (activity == null)
+            return;
 
         final Activity _activity = activity;
 
